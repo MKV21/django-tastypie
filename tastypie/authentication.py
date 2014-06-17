@@ -180,7 +180,7 @@ class ApiKeyAuthentication(Authentication):
         Should return either ``True`` if allowed, ``False`` if not or an
         ``HttpResponse`` if you need something custom.
         """
-        from tastypie.compat import User
+        from django.contrib.auth.models import User
 
         try:
             username, api_key = self.extract_credentials(request)
@@ -191,8 +191,7 @@ class ApiKeyAuthentication(Authentication):
             return self._unauthorized()
 
         try:
-            lookup_kwargs = {username_field: username}
-            user = User.objects.get(**lookup_kwargs)
+            user = User.objects.get(username=username)
         except (User.DoesNotExist, User.MultipleObjectsReturned):
             return self._unauthorized()
 
